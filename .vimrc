@@ -72,7 +72,7 @@ set listchars=tab:»·,trail:·,precedes:<,extends:>
 set list
 
 " no beep
-autocmd VimEnter * set vb t_vb= 
+autocmd VimEnter * set vb t_vb=
 
 " tab navigation like firefox
 nmap <C-S-tab> :tabprevious<cr>
@@ -82,7 +82,7 @@ map <C-tab> :tabnext<cr>
 imap <C-S-tab> <ESC>:tabprevious<cr>i
 imap <C-tab> <ESC>:tabnext<cr>i
 nmap <C-t> :tabnew<cr>
-imap <C-t> <ESC>:tabnew<cr> 
+imap <C-t> <ESC>:tabnew<cr>
 " map \tx for the console version as well
 if !has("gui_running")
    nmap <Leader>tn :tabnext<cr>
@@ -111,7 +111,6 @@ let g:NERDShutUp = 1
 
 " Make sure taglist doesn't change the window size
 let g:Tlist_Inc_Winwidth = 0
-nnoremap <silent> <F8> :TlistToggle<CR>
 
 " language specific customizations:
 let g:python_highlight_numbers = 1
@@ -131,19 +130,13 @@ au BufNewFile,BufRead *.notes setf notes
 au BufNewFile,BufRead *.mg setf mg
 
 syntax on " syntax hilight on
-syntax sync fromstart 
+syntax sync fromstart
 filetype plugin indent on
 
 runtime xmlpretty.vim
 command! -range=% Xmlpretty :call XmlPretty(<line1>, <line2>)
 map <C-K><C-F> :Xmlpretty<CR>
 
-"
-" Bind NERD_Tree plugin to a <Ctrl+E,Ctrl+E>
-"
-noremap <F3> :NERDTreeToggle<CR>
-
-"
 " Configure TOhtml command
 "
 let html_number_lines = 0
@@ -181,7 +174,7 @@ au BufNewFile,BufRead *.* call rainbow_parentheses#LoadRound()
 au BufNewFile,BufRead *.* call rainbow_parentheses#LoadSquare()
 au BufNewFile,BufRead *.* call rainbow_parentheses#LoadBraces()
 
-" 
+"
 " Configure tabs for the console version
 "
 function! MyTabLine()
@@ -218,6 +211,52 @@ function! MyTabLabel(n)
   return bufname(buflist[winnr - 1])
 endfunction
 
+function GetGooglePythonIndent(lnum)
+
+  " Indent inside parens.
+  " Align with the open paren unless it is at the end of the line.
+  " E.g.
+  "   open_paren_not_at_EOL(100,
+  "                         (200,
+  "                          300),
+  "                         400)
+  "   open_paren_at_EOL(
+  "       100, 200, 300, 400)
+  call cursor(a:lnum, 1)
+  let [par_line, par_col] = searchpairpos('(\|{\|\[', '', ')\|}\|\]', 'bW',
+        \ "line('.') < " . (a:lnum - s:maxoff) . " ? dummy :"
+        \ . " synIDattr(synID(line('.'), col('.'), 1), 'name')"
+        \ . " =~ '\\(Comment\\|String\\)$'")
+  if par_line > 0
+    call cursor(par_line, 1)
+    if par_col != col("$") - 1
+      return par_col
+    endif
+  endif
+
+  " Delegate the rest to the original function.
+  return GetPythonIndent(a:lnum)
+
+endfunction
+
+let pyindent_nested_paren="&sw*2"
+let pyindent_open_paren="&sw*2"
+
+" 去掉每行尾的空白
+" Strip trailing whitespace
+function! <SID>StripTrailingWhitespaces()
+    " Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " Do the business:
+    %s/\s\+$//e
+    " Clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+
 "
 " Status line configuration gotten from: http://rgarciasuarez.free.fr/dotfiles/vimrc
 "
@@ -253,3 +292,71 @@ if has('statusline')
    endif
 endif
 
+ Re-source the rc files
+:function! Re_source(file_name)
+: let path_file_name = g:VIM_CUSTOM . a:file_name
+:  if filereadable(path_file_name)
+:   execute 'source ' . path_file_name
+":   echo path_file_name . " Loaded sucessfully"
+:  else
+:   echo path_file_name . " does NOT exist"
+:   return 0
+:  endif
+:endfunction"
+
+
+" === PHP ===
+
+autocmd FileType php noremap <C-M> :w!<CR>:!php %<CR>
+autocmd FileType php noremap <C-L> :!php -l %<CR>
+
+autocmd FileType php source ~/.vim/plugin/php-doc.vim
+autocmd FileType php noremap <C-P> :call PhpDocSingle()<CR>
+autocmd FileType php vnoremap <C-P> :call PhpDocRange()<CR>
+autocmd FileType php inoremap <C-P> <ESC>:call PhpDocSingle()<CR>i
+autocmd FileType php noremap <F8> oif<SPACE>() {<ESC>o}<ESC>kf(a
+" nnoremap <C-P> :call PhpDocSingle()<CR>
+
+" === END ===
+
+" === 键盘映射 ==
+nnoremap <silent> <F2> :set paste<CR>
+nnoremap <silent> <F3> :NERDTreeToggle<CR>
+nnoremap <silent> <F4> :TlistToggle<CR>
+nnoremap <silent> <F5> :Vimwiki2HTML<cr>
+
+nnoremap <leader><Space> <Plug>VimwikiToggleListItem
+
+" 映射一个W的命令，强制保存当前的内容
+command W w !sudo tee % > /dev/null
+
+" for python
+iab pdb import ipdb;ipdb.set_trace()
+iab #p # -*- encoding:utf-8 -*-
+iab #_ #!/usr/bin/env python<ESC>o# -*- encoding:utf-8 -*-
+iab xdate <c-r>=strftime("20%y-%m-%d")<cr>
+iab __ if __name__ == "__main__":
+" === END ===
+"
+" === VIM_WIKI ===
+let g:vimwiki_menu = ''
+let g:vimwiki_CJK_length = 1
+let g:vimwiki_use_mouse = 1
+let g:vimwiki_list = [{'path': '~/vimwiki/KMS', 'diary_link_fmt': '%Y-%m-%d',
+                       \ 'template_ext': '.html', 'diary_link_count': 4,
+                       \ 'syntax': 'default', 'index': 'index', 'diary_header': 'Diary',
+                       \ 'ext': '.wiki', 'diary_rel_path': 'diary/',
+                       \ 'path_html' : '~/vimwiki/html', 'temp': 0,
+                       \ 'template_path': '~/vimwiki/templates/',
+                       \ 'html_header': '~/vimwiki/templates/header.tpl'},
+                       \ {'path': '~/vimwiki/Life', 'path_html': '~/vimwiki/html',
+                       \  'html_header': '~/vimwiki/templates/header.tpl'}]
+
+"
+" === END ===
+
+" === LUA ===
+" 增加lua的自动补全
+let g:lua_complete_omni=1
+let g:lua_compiler_name = '/usr/bin/luac'
+" === END ===
