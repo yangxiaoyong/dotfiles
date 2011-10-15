@@ -25,8 +25,8 @@ else
 endif
 
 set modeline
-set tabstop=2 " tab size = 2
-set shiftwidth=2 " soft space = 2
+set tabstop=4 " tab size = 2
+set shiftwidth=4 " soft space = 2
 set smarttab
 set expandtab " expand tabs
 set wildchar=9 " tab as completion character
@@ -141,8 +141,7 @@ map <C-K><C-F> :Xmlpretty<CR>
 "
 " Bind NERD_Tree plugin to a <Ctrl+E,Ctrl+E>
 "
-noremap <C-E><C-E> :NERDTree<CR>
-noremap <C-E><C-C> :NERDTreeClose<CR>
+noremap <F3> :NERDTreeToggle<CR>
 
 "
 " Configure TOhtml command
@@ -168,7 +167,7 @@ let python_highlight_all = 1
 " Enable spellchecking conditionally
 "
 map <Leader>se :setlocal spell spelllang=en_us<CR>
-map <Leader>ss :setlocal spell spelllang=es_es<CR>
+" map <Leader>ss :setlocal spell spelllang=es_es<CR>
 map <Leader>sn :setlocal nospell<CR>
 
 "
