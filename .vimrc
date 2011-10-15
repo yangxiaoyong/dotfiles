@@ -288,11 +288,10 @@ if has('statusline')
    call SetStatusLineStyle()
    " Window title
    if has('title')
-	   set titlestring=%t%(\ [%R%M]%)
+     set titlestring=%t%(\ [%R%M]%)
    endif
 endif
 
- Re-source the rc files
 :function! Re_source(file_name)
 : let path_file_name = g:VIM_CUSTOM . a:file_name
 :  if filereadable(path_file_name)
