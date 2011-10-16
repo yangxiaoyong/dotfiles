@@ -60,7 +60,7 @@ set incsearch " incremental searching on
 set hlsearch " highlight all matches
 set smartcase
 set cursorline
-set selectmode=key
+" set selectmode=key
 set showtabline=2 " show always for console version
 set tabline=%!MyTabLine()
 set wildmenu " menu on statusbar for command autocomplete
@@ -75,14 +75,14 @@ set list
 autocmd VimEnter * set vb t_vb=
 
 " tab navigation like firefox
-nmap <C-S-tab> :tabprevious<cr>
-nmap <C-tab> :tabnext<cr>
-map <C-S-tab> :tabprevious<cr>
-map <C-tab> :tabnext<cr>
-imap <C-S-tab> <ESC>:tabprevious<cr>i
-imap <C-tab> <ESC>:tabnext<cr>i
-nmap <C-t> :tabnew<cr>
-imap <C-t> <ESC>:tabnew<cr>
+" nmap <C-S-tab> :tabprevious<cr>
+" nmap <C-tab> :tabnext<cr>
+" map <C-S-tab> :tabprevious<cr>
+" map <C-tab> :tabnext<cr>
+" imap <C-S-tab> <ESC>:tabprevious<cr>i
+" imap <C-tab> <ESC>:tabnext<cr>i
+" nmap <C-t> :tabnew<cr>
+" imap <C-t> <ESC>:tabnew<cr>
 " map \tx for the console version as well
 if !has("gui_running")
    nmap <Leader>tn :tabnext<cr>
@@ -167,7 +167,7 @@ map <Leader>sn :setlocal nospell<CR>
 " Other stuff
 "
 runtime 'macros/matchit.vim'
-nmap <leader>R :RainbowParenthesesToggle<CR>
+" nmap <leader>R :RainbowParenthesesToggle<CR>
 " these are supposed to be done on syntax files, but
 " they fit pretty much everything I work on.
 au BufNewFile,BufRead *.* call rainbow_parentheses#LoadRound()
@@ -309,7 +309,7 @@ endif
 autocmd FileType php noremap <C-M> :w!<CR>:!php %<CR>
 autocmd FileType php noremap <C-L> :!php -l %<CR>
 
-autocmd FileType php source ~/.vim/plugin/php-doc.vim
+" autocmd FileType php source ~/.vim/plugin/php-doc.vim
 autocmd FileType php noremap <C-P> :call PhpDocSingle()<CR>
 autocmd FileType php vnoremap <C-P> :call PhpDocRange()<CR>
 autocmd FileType php inoremap <C-P> <ESC>:call PhpDocSingle()<CR>i
