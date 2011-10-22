@@ -318,6 +318,11 @@ autocmd FileType php noremap <F8> oif<SPACE>() {<ESC>o}<ESC>kf(a
 
 " === END ===
 
+" === C ===
+" C的缩进使用tab制表符
+autocmd FileType c,cpp set noexpandtab
+" === END ===
+
 " === 键盘映射 ==
 nnoremap <silent> <F2> :set paste<CR>
 nnoremap <silent> <F3> :NERDTreeToggle<CR>
