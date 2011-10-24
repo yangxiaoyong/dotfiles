@@ -1,24 +1,24 @@
 " Vim plugin for showing marks using number array.
 " Maintainer: Hongli Gao <left.slipper at gmail dot com>
-" Last Change: 2010 August 27
+" Last Change: 2010 August 27 
 " Version: 1.4
 "
 " USAGE:
 " Copy this file to your vim's plugin folder.
 " ####  You can set marks only less 100.  ####
 "
-" make a mark, or delete it:
+" make a mark, or delete it: 
 "                            ctrl + F2
 "                            mm
-" move to ahead mark:
+" move to ahead mark:          
 "                            shift + F2
 "                            mv
-" move to next mark:
+" move to next mark:                           
 "                            F2
 "                            mb
 " moving a mark:
 "                            m.
-"  (press m. to mark a mark, and move the cursor to new line,
+"  (press m. to mark a mark, and move the cursor to new line, 
 "   press the m. again, you can moving a mark.)
 "
 " delete all marks:
@@ -28,13 +28,13 @@
 " Add
 "
 " let g:Signs_file_path_corey='c:\\'
-"
+" 
 " to your gvimrc, change it to your path.
 "
 " press F6, input a name on command line, press ENTER.   # Save marks.
 " press F5, input a name that you used, press ENTER.     # Reload marks.
 "
-" copyright (c) 2010 Hongli Gao;
+" copyright (c) 2010 Hongli Gao; 
 " Distributed under the GNU General Public License.
 " ---------------------------------------------------------------------
 
@@ -411,24 +411,24 @@ if !hasmapto('<Plug>Place_sign')
 endif
 nnoremap <silent> <script> <Plug>Place_sign :call Place_sign()<cr>
 
-if !hasmapto('<Plug>Goto_next_sign')
+if !hasmapto('<Plug>Goto_next_sign') 
   " map <unique> <F2> <Plug>Goto_next_sign
   map <silent> <unique> mb <Plug>Goto_next_sign
 endif
 nnoremap <silent> <script> <Plug>Goto_next_sign :call Goto_next_sign()<cr>
 
-if !hasmapto('<Plug>Goto_prev_sign')
+if !hasmapto('<Plug>Goto_prev_sign') 
   map <unique> <s-F2> <Plug>Goto_prev_sign
   map <silent> <unique> mv <Plug>Goto_prev_sign
 endif
 nnoremap <silent> <script> <Plug>Goto_prev_sign :call Goto_prev_sign()<cr>
 
-if !hasmapto('<Plug>Remove_all_signs')
+if !hasmapto('<Plug>Remove_all_signs') 
   " map <unique> <F4> <Plug>Remove_all_signs
 endif
 nnoremap <silent> <script> <Plug>Remove_all_signs :call Remove_all_signs()<cr>
 
-if !hasmapto('<Plug>Move_sign')
+if !hasmapto('<Plug>Move_sign') 
   map <silent> <unique> m. <Plug>Move_sign
 endif
 nnoremap <silent> <script> <Plug>Move_sign :call Move_sign()<cr>

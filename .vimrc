@@ -1,6 +1,6 @@
 set runtimepath=~/.vim,$VIMRUNTIME,~/.vim/after
 " enable clipboard and other Win32 features
-source $VIMRUNTIME/mswin.vim
+" source $VIMRUNTIME/mswin.vim
 
 "
 " appearance options
@@ -60,7 +60,7 @@ set incsearch " incremental searching on
 set hlsearch " highlight all matches
 set smartcase
 set cursorline
-" set selectmode=key
+set selectmode=key
 set showtabline=2 " show always for console version
 set tabline=%!MyTabLine()
 set wildmenu " menu on statusbar for command autocomplete
@@ -75,14 +75,14 @@ set list
 autocmd VimEnter * set vb t_vb=
 
 " tab navigation like firefox
-" nmap <C-S-tab> :tabprevious<cr>
-" nmap <C-tab> :tabnext<cr>
-" map <C-S-tab> :tabprevious<cr>
-" map <C-tab> :tabnext<cr>
-" imap <C-S-tab> <ESC>:tabprevious<cr>i
-" imap <C-tab> <ESC>:tabnext<cr>i
-" nmap <C-t> :tabnew<cr>
-" imap <C-t> <ESC>:tabnew<cr>
+nmap <C-S-tab> :tabprevious<cr>
+nmap <C-tab> :tabnext<cr>
+map <C-S-tab> :tabprevious<cr>
+map <C-tab> :tabnext<cr>
+imap <C-S-tab> <ESC>:tabprevious<cr>i
+imap <C-tab> <ESC>:tabnext<cr>i
+nmap <C-t> :tabnew<cr>
+imap <C-t> <ESC>:tabnew<cr>
 " map \tx for the console version as well
 if !has("gui_running")
    nmap <Leader>tn :tabnext<cr>
@@ -111,6 +111,7 @@ let g:NERDShutUp = 1
 
 " Make sure taglist doesn't change the window size
 let g:Tlist_Inc_Winwidth = 0
+nnoremap <silent> <F8> :TlistToggle<CR>
 
 " language specific customizations:
 let g:python_highlight_numbers = 1
@@ -137,6 +138,13 @@ runtime xmlpretty.vim
 command! -range=% Xmlpretty :call XmlPretty(<line1>, <line2>)
 map <C-K><C-F> :Xmlpretty<CR>
 
+"
+" Bind NERD_Tree plugin to a <Ctrl+E,Ctrl+E>
+"
+noremap <C-E><C-E> :NERDTree<CR>
+noremap <C-E><C-C> :NERDTreeClose<CR>
+
+"
 " Configure TOhtml command
 "
 let html_number_lines = 0
@@ -160,14 +168,14 @@ let python_highlight_all = 1
 " Enable spellchecking conditionally
 "
 map <Leader>se :setlocal spell spelllang=en_us<CR>
-" map <Leader>ss :setlocal spell spelllang=es_es<CR>
+map <Leader>ss :setlocal spell spelllang=es_es<CR>
 map <Leader>sn :setlocal nospell<CR>
 
 "
 " Other stuff
 "
 runtime 'macros/matchit.vim'
-" nmap <leader>R :RainbowParenthesesToggle<CR>
+nmap <leader>R :RainbowParenthesesToggle<CR>
 " these are supposed to be done on syntax files, but
 " they fit pretty much everything I work on.
 au BufNewFile,BufRead *.* call rainbow_parentheses#LoadRound()
@@ -211,52 +219,6 @@ function! MyTabLabel(n)
   return bufname(buflist[winnr - 1])
 endfunction
 
-function GetGooglePythonIndent(lnum)
-
-  " Indent inside parens.
-  " Align with the open paren unless it is at the end of the line.
-  " E.g.
-  "   open_paren_not_at_EOL(100,
-  "                         (200,
-  "                          300),
-  "                         400)
-  "   open_paren_at_EOL(
-  "       100, 200, 300, 400)
-  call cursor(a:lnum, 1)
-  let [par_line, par_col] = searchpairpos('(\|{\|\[', '', ')\|}\|\]', 'bW',
-        \ "line('.') < " . (a:lnum - s:maxoff) . " ? dummy :"
-        \ . " synIDattr(synID(line('.'), col('.'), 1), 'name')"
-        \ . " =~ '\\(Comment\\|String\\)$'")
-  if par_line > 0
-    call cursor(par_line, 1)
-    if par_col != col("$") - 1
-      return par_col
-    endif
-  endif
-
-  " Delegate the rest to the original function.
-  return GetPythonIndent(a:lnum)
-
-endfunction
-
-let pyindent_nested_paren="&sw*2"
-let pyindent_open_paren="&sw*2"
-
-" 去掉每行尾的空白
-" Strip trailing whitespace
-function! <SID>StripTrailingWhitespaces()
-    " Preparation: save last search, and cursor position.
-    let _s=@/
-    let l = line(".")
-    let c = col(".")
-    " Do the business:
-    %s/\s\+$//e
-    " Clean up: restore previous search history, and cursor position
-    let @/=_s
-    call cursor(l, c)
-endfunction
-autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
-
 "
 " Status line configuration gotten from: http://rgarciasuarez.free.fr/dotfiles/vimrc
 "
@@ -288,40 +250,53 @@ if has('statusline')
    call SetStatusLineStyle()
    " Window title
    if has('title')
-     set titlestring=%t%(\ [%R%M]%)
+    set titlestring=%t%(\ [%R%M]%)
    endif
 endif
 
-:function! Re_source(file_name)
-: let path_file_name = g:VIM_CUSTOM . a:file_name
-:  if filereadable(path_file_name)
-:   execute 'source ' . path_file_name
-":   echo path_file_name . " Loaded sucessfully"
-:  else
-:   echo path_file_name . " does NOT exist"
-:   return 0
-:  endif
-:endfunction"
+" 去掉每行尾的空白
+" Strip trailing whitespace
+function! <SID>StripTrailingWhitespaces()
+    " Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " Do the business:
+    %s/\s\+$//e
+    " Clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+
+
+" === NERDTree ===
+map <F3> :NERDTreeToggle<CR>
+let NERDTreeIgnore=[]
+let NERDTreeShowHidden=1
+" === END ===
 
 
 " === PHP ===
 
-autocmd FileType php noremap <C-M> :w!<CR>:!php %<CR>
-autocmd FileType php noremap <C-L> :!php -l %<CR>
+autocmd FileType php noremap <C-M> :w!<CR>:!/apps/lib/php5/bin/php %<CR>
+autocmd FileType php noremap <C-L> :!/apps/lib/php5/bin/php -l %<CR>
 
 " autocmd FileType php source ~/.vim/plugin/php-doc.vim
-autocmd FileType php noremap <C-P> :call PhpDocSingle()<CR>
-autocmd FileType php vnoremap <C-P> :call PhpDocRange()<CR>
-autocmd FileType php inoremap <C-P> <ESC>:call PhpDocSingle()<CR>i
+" autocmd FileType php noremap <C-P> :call PhpDocSingle()<CR>
+"autocmd FileType php vnoremap <C-P> :call PhpDocRange()<CR>
+"autocmd FileType php inoremap <C-P> <ESC>:call PhpDocSingle()<CR>i
 autocmd FileType php noremap <F8> oif<SPACE>() {<ESC>o}<ESC>kf(a
+autocmd FileType php inoremap function function() {}<ESC>F{a<CR><ESC>k^f(i
+autocmd FileType php inoremap ?php <?php<CR>?><ESC>O
 " nnoremap <C-P> :call PhpDocSingle()<CR>
 
 " === END ===
 
-" === C ===
 " C的缩进使用tab制表符
 autocmd FileType c,cpp set noexpandtab
-" === END ===
+" HTML的缩紧使用2个空格
+autocmd FileType html set shiftwidth=2 tabstop=2
 
 " === 键盘映射 ==
 nnoremap <silent> <F2> :set paste<CR>
@@ -335,11 +310,11 @@ nnoremap <leader><Space> <Plug>VimwikiToggleListItem
 command W w !sudo tee % > /dev/null
 
 " for python
-iab pdb import ipdb;ipdb.set_trace()
-iab #p # -*- encoding:utf-8 -*-
-iab #_ #!/usr/bin/env python<ESC>o# -*- encoding:utf-8 -*-
-iab xdate <c-r>=strftime("20%y-%m-%d")<cr>
-iab __ if __name__ == "__main__":
+autocmd FileType python inoremap pdb import ipdb;ipdb.set_trace()
+autocmd FileType python inoremap #p # -*- encoding:utf-8 -*-
+autocmd FileType python inoremap #_ #!/usr/bin/env python<ESC>o# -*- encoding:utf-8 -*-
+autocmd FileType python inoremap xdate <c-r>=strftime("20%y-%m-%d")<cr>
+autocmd FileType python inoremap __ if __name__ == "__main__":
 " === END ===
 "
 " === VIM_WIKI ===

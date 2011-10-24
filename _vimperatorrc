@@ -8,5 +8,5 @@ set hlsearch
 map <BS> <Esc>:back<cr>
 map <S-BS> <Esc>:forward<cr>
 " disable bell
-set visualbell
+" set visualbell
 
