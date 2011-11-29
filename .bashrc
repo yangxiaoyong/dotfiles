@@ -34,3 +34,4 @@ extract () {
 }
 
 alias x=extract
+alias ipy=ipython

@@ -314,7 +314,7 @@ autocmd FileType python inoremap pdb import ipdb;ipdb.set_trace()
 autocmd FileType python inoremap #p # -*- encoding:utf-8 -*-
 autocmd FileType python inoremap #_ #!/usr/bin/env python<ESC>o# -*- encoding:utf-8 -*-
 autocmd FileType python inoremap xdate <c-r>=strftime("20%y-%m-%d")<cr>
-autocmd FileType python inoremap __ if __name__ == "__main__":
+" autocmd FileType python inoremap __ if __name__ == "__main__":
 " === END ===
 "
 " === VIM_WIKI ===

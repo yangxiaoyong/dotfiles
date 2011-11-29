@@ -1,0 +1,82 @@
+alignment bottom_right
+background no
+border_width 1
+cpu_avg_samples 2
+default_color white
+default_outline_color white
+default_shade_color 111
+double_buffer yes
+draw_borders no
+draw_graph_borders yes
+draw_outline no
+draw_shades no
+use_xft yes
+xftfont MONACO:size=8
+gap_x 20
+gap_y 60
+minimum_size 360 5
+net_avg_samples 2
+no_buffers yes
+out_to_console no
+out_to_stderr no
+extra_newline no
+own_window yes
+own_window_class Conky
+own_window_type desktop
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+own_window_transparent no
+own_window_argb_visual yes
+own_window_argb_value 100
+stippled_borders 0
+update_interval 1.0
+uppercase no
+use_spacer none
+show_graph_scale no
+show_graph_range no
+
+hddtemp_host 127.0.0.1
+hddtemp_port 7634
+
+TEXT
+$alignc${uid_name 1000}@$nodename ${color grey}-$color $sysname $kernel ${color grey}on$color $machine
+$alignc${color grey}${time %d %h %Y %H:%M}
+$hr
+${color grey}Uptime:$color     $uptime_short $alignr$loadavg
+${color grey}Frequency:$color  ${freq_g}GHz
+${color grey}RAM Usage:$color  $mem/$memmax - $memperc% ${membar 4}
+${color grey}Swap Usage:$color $swap/$swapmax - $swapperc% ${swapbar 4}
+${color grey}CPU Usage:$color  $cpu% ${cpubar 4}
+${font MONACO:size=9}\
+    ${color ddd}${top name 1} $alignr(${top pid 1}) ${top cpu 1}%
+    ${color ddd}${top name 2} $alignr(${top pid 2}) ${top cpu 2}%
+    ${color ddd}${top name 3} $alignr(${top pid 3}) ${top cpu 3}%
+${font MONACO:size=9}\
+${color grey}Processes:$color  $processes $alignr${color grey}Running:$color $running_processes
+${color grey}Entropy:$color    $entropy_avail ${entropy_bar 4}
+$hr
+${color 999}File systems:
+ ${color grey}/     $color${fs_used /}/${fs_size /} ${fs_bar 6 /}
+ ${color grey}/apps $color${fs_used /apps}/${fs_size /apps} ${fs_bar 6 /apps}
+${voffset -8}
+${color 999}/dev/sda:
+${if_match "${hddtemp /dev/sda}" != "N/A"}\
+ ${color grey}Temperature: $color${hddtemp /dev/sda}°C
+$endif\
+ ${color grey}Disk IO: ${diskiograph /dev/sda 17}
+          ${font MONACO:size=9}${color grey}R: $color${diskio_read /dev/sda} $alignr ${color grey}W: $color${diskio_write /dev/sda}
+${font MONACO:size=9}\
+    ${color ddd}${top_io name 1} $alignr(${top_io pid 1}) ${top_io io_perc 1}%
+    ${color ddd}${top_io name 2} $alignr(${top_io pid 2}) ${top_io io_perc 2}%
+    ${color ddd}${top_io name 3} $alignr(${top_io pid 3}) ${top_io io_perc 3}%
+${font MONACO:size=9}\
+${if_up wlan0}\
+${voffset -8}
+${color 999}Networking: $color$alignr${wireless_essid wlan0}
+ ${color grey}Link quality: $color${wireless_link_qual_perc wlan0}% ${wireless_link_bar 4 wlan0}
+ ${color grey}Total down/up: $color${totaldown wlan0}/${totalup wlan0}
+ ${color grey}Up: ${upspeedgraph wlan0 17,110}   Down: ${downspeedgraph wlan0 17,110}
+     ${font MONACO:size=9}$color${upspeed wlan0} $alignr ${downspeed wlan0}
+${font MONACO:size=9}\
+$endif\
+$hr
+${color grey}$alignc${execi 3600 xfce4-about --version | head -1 | sed 's/xfce4-about/Xfce/'}

@@ -38,7 +38,7 @@ elseif exists("b:current_syntax")
   finish
 endif
 
-setlocal foldmethod=syntax
+" setlocal foldmethod=syntax
 
 syn keyword pythonStatement	break continue del
 syn keyword pythonStatement	except exec finally
@@ -47,7 +47,7 @@ syn keyword pythonStatement	return try with
 syn keyword pythonStatement	global assert
 syn keyword pythonStatement	lambda yield
 
-syn match   pythonDefStatement	/^\s*\%(def\|class\)/
+syn match   pythonDefStatement	/^\s*\%(def\s\|class\)/
   \ nextgroup=pythonFunction skipwhite
 syn region  pythonFunctionFold	start="^\z(\s*\)\%(def\|class\)\>"
   \ end="\ze\%(\s*\n\)\+\%(\z1\s\)\@!." fold transparent

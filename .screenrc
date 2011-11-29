@@ -25,3 +25,8 @@ screen -t sh 0
 screen -t irssi 1
 select 0
 
+escape ^A^A
+bindkey ^[z prev
+bindkey ^[x next
+bindkey ^[, prev
+
